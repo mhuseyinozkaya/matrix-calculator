@@ -39,7 +39,7 @@ public class MatrisHesaplama {
 
     /*  Verimsiz determinant hesaplama yöntemi  */
     /*  determinantı hesaplamak için ilk satıra göre laplace genişlemesi yapıyor */
-    static int calcDetWith_LaplaceExp(int[][] matris, int n) {
+    static int calculateDeterminantLaplace(int[][] matris, int n) {
 
         int[][] tempMatris = new int[n - 1][n - 1];
 
@@ -65,7 +65,7 @@ public class MatrisHesaplama {
                     p++;
                 }
 
-                kofaktor = (int) (Math.pow(-1, 0 + k) * calcDetWith_LaplaceExp(tempMatris, n - 1));
+                kofaktor = (int) (Math.pow(-1, 0 + k) * calculateDeterminantLaplace(tempMatris, n - 1));
                 determinant += matris[0][k] * kofaktor;
 
             }

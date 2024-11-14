@@ -24,4 +24,6 @@ hs_err_pid*
 replay_pid*
 
 # target dizinini git'ten kaldır
-/target/*
+target/
+
+planned_feature_list

@@ -7,17 +7,18 @@ package org.matrix.matrixcalc;
  *
  * @author muhammed
  */
+
 public class MatrixCalc {
 
-    static int[][] matrisA, matrisB, matrisTemp;
+    static int[][] matrisTemp;
 
-    public static int[][] defMatrix() {
+    public static int[][] defMatrix(String adMatris) {
 
-        int[][] matris;
+        Matris.getMatrixInfo();
 
-        Matris.matrisBilgiAl();
-        matris = Matris.matrisOlustur(Matris.satir, Matris.sutun);
-        matris = Matris.matrisDoldur(matris);
+        int[][] matris = Matris.createMatrix(Matris.satir, Matris.sutun);
+
+        Matris.printMatrix(matris, adMatris);
 
         return matris;
     }
@@ -34,31 +35,31 @@ public class MatrixCalc {
         return false;
     }
 
-    public static void toplaMatris() {
+    public static void toplaMatris(int[][] matrisA, int[][] matrisB) {
         if (boyutKontrol(matrisA, matrisB, "toplama")) {
             matrisTemp = MatrisHesaplama.matrisTopla(matrisA, matrisB, 1);
-            Matris.matrisYazdir(matrisTemp, "Sonuç");
+            Matris.printMatrix(matrisTemp, "Sonuç");
         }
     }
 
     /*Çıkarma işlemi için paramatre olarak -1 gönderilir ve her bir elemanın negatifi alınıp toplanır*/
-    public static void cikarMatris() {
+    public static void cikarMatris(int[][] matrisA, int[][] matrisB) {
         if (boyutKontrol(matrisA, matrisB, "cikarma")) {
             matrisTemp = MatrisHesaplama.matrisTopla(matrisA, matrisB, -1);
-            Matris.matrisYazdir(matrisTemp, "Sonuç");
+            Matris.printMatrix(matrisTemp, "Sonuç");
         }
     }
 
-    public static void carpMatris() {
+    public static void carpMatris(int[][] matrisA, int[][] matrisB) {
         if (boyutKontrol(matrisA, matrisB, "carpma")) {
             matrisTemp = MatrisHesaplama.matrisCarp(matrisA, matrisB);
-            Matris.matrisYazdir(matrisTemp, "Sonuç");
+            Matris.printMatrix(matrisTemp, "Sonuç");
         }
     }
 
-    public static void calcDet() {
+    public static void calcDet(int[][] matrisA) {
         if (matrisA.length == matrisA[0].length) {
-            int det = MatrisHesaplama.calcDetWith_LaplaceExp(matrisA, matrisA.length);
+            long det = MatrisHesaplama.calculateDeterminantLaplace(matrisA, matrisA.length);
             System.out.println("Determinant : " + det);
         } else {
             System.out.println("Determinant hesaplanamadı!");
@@ -71,40 +72,21 @@ public class MatrixCalc {
 
         do {
             System.out.println("Matris Toplama(1) , Matris Çıkarma(2) , Matris Çarpımı(3) , Determinant(4)");
+
             secim = Matris.input.nextByte();
+            Matris.input.nextLine(); //nextInt() sonrası boşluğu temizlemek için
 
             switch (secim) {
-                case 1 -> {
-                    matrisA = defMatrix();
-                    matrisB = defMatrix();
-                    Matris.matrisYazdir(matrisA, "Matris A");
-                    Matris.matrisYazdir(matrisB, "Matris B");
-                    toplaMatris();
-
-                }
-                case 2 -> {
-                    matrisA = defMatrix();
-                    matrisB = defMatrix();
-                    Matris.matrisYazdir(matrisA, "Matris A");
-                    Matris.matrisYazdir(matrisB, "Matris B");
-                    cikarMatris();
-                }
-                case 3 -> {
-                    matrisA = defMatrix();
-                    matrisB = defMatrix();
-                    Matris.matrisYazdir(matrisA, "Matris A");
-                    Matris.matrisYazdir(matrisB, "Matris B");
-                    carpMatris();
-                }
-                case 4 -> {
-                    matrisA = defMatrix();
-                    Matris.matrisYazdir(matrisA, "Matris A");
-                    calcDet();
-                    break;
-                }
-                default -> {
-                    break;
-                }
+                case 1 ->
+                    toplaMatris(defMatrix("Matris A"), defMatrix("Matris B"));
+                case 2 ->
+                    cikarMatris(defMatrix("Matris A"), defMatrix("Matris B"));
+                case 3 ->
+                    carpMatris(defMatrix("Matris A"), defMatrix("Matris B"));
+                case 4 ->
+                    calcDet(defMatrix("Matris A"));
+                default ->
+                    secim = 0;
             }
         } while (secim != 0);
     }
