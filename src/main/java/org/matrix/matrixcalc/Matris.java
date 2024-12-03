@@ -2,10 +2,6 @@ package org.matrix.matrixcalc;
 
 import java.util.Scanner;
 
-/**
- *
- * @author muhammed
- */
 public class Matris {
 
     static Scanner input = new Scanner(System.in);
@@ -18,18 +14,16 @@ public class Matris {
         do {
             System.out.println("Matrisin boyutunu 'satır x sütün' formatında girin Ör. '5x4' :");
 
-            String boyut = input.nextLine();
+            String[] boyut = input.nextLine().split("x");
 
-            String[] boyutlar = boyut.split("x");
-
-            if (boyutlar.length != 2) {
+            if (boyut.length != 2) {
 
                 System.out.println("Matrisin formatını doğru girdiğinizden emin olun !");
                 check = true;
             } else {
 
-                satir = Integer.parseInt(boyutlar[0]);
-                sutun = Integer.parseInt(boyutlar[1]);
+                satir = Integer.parseInt(boyut[0]);
+                sutun = Integer.parseInt(boyut[1]);
 
                 if (satir < 1 || sutun < 1) {
                     System.out.print("Matrisin boyutunu doğru girdiğinizden emin olun ! \nTekrar Deneyin...\n");
@@ -43,11 +37,11 @@ public class Matris {
 
     }
 
-    public static int[][] createMatrix(int satir, int sutun) {
+    public static int[][] createMatrix(int satir, int sutun,String matName) {
 
         int[][] matris = new int[satir][sutun];
 
-        System.out.println("Matrisi doldurun :");
+        System.out.println(matName+" girin :");
         for (int i = 0; i < matris.length; i++) {
             for (int j = 0; j < matris[0].length; j++) {
                 while (true) {
@@ -60,7 +54,6 @@ public class Matris {
                 }
             }
         }
-        //input.nextLine();   //nextInt() sonrası boşluğu temizlemek için
         return matris;
     }
 

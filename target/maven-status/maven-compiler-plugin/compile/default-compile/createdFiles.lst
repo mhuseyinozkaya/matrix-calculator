@@ -1,3 +1,11 @@
 org/matrix/matrixcalc/MatrisHesaplama.class
-org/matrix/matrixcalc/Matris.class
+org/matrix/matrixcalc/test/MatrisHesaplama.class
+org/matrix/matrixcalc/SyntaxInterpreter.class
 org/matrix/matrixcalc/MatrixCalc.class
+org/matrix/matrixcalc/test/Matris.class
+org/matrix/matrixcalc/test/MatrixCalculatorGUI.class
+org/matrix/matrixcalc/test/MatrixCalculatorGUI$3.class
+org/matrix/matrixcalc/test/MatrixCalculatorGUI$1.class
+org/matrix/matrixcalc/Matris.class
+org/matrix/matrixcalc/SyntaxInterpreterTest.class
+org/matrix/matrixcalc/test/MatrixCalculatorGUI$2.class

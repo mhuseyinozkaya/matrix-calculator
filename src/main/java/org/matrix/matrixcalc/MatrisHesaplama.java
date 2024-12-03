@@ -1,9 +1,5 @@
 package org.matrix.matrixcalc;
 
-/**
- *
- * @author muhammed
- */
 public class MatrisHesaplama {
 
     static int[][] matrisTopla(int[][] matrisA, int[][] matrisB, int sign) {
@@ -37,17 +33,30 @@ public class MatrisHesaplama {
         return matrisSonuc;
     }
 
+    static int[][] calculateTranspose(int[][] matrix) {
+
+        int[][] matrixtemp = new int[matrix[0].length][matrix.length];
+
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrixtemp[j][i] = matrix[i][j];
+            }
+        }
+
+        return matrixtemp;
+
+    }
+
     /*  Verimsiz determinant hesaplama yöntemi  */
-    /*  determinantı hesaplamak için ilk satıra göre laplace genişlemesi yapıyor */
+ /*  determinantı hesaplamak için ilk satıra göre laplace genişlemesi yapıyor */
     static int calculateDeterminantLaplace(int[][] matris, int n) {
 
         int[][] tempMatris = new int[n - 1][n - 1];
 
-        int kofaktor, determinant = 0;
+        int cofactor, determinant = 0;
 
         if (n == 2) {
-            determinant = (matris[0][0] * matris[1][1]) - (matris[0][1] * matris[1][0]);
-            return determinant;
+            return (matris[0][0] * matris[1][1]) - (matris[0][1] * matris[1][0]);
         } else {
 
             //***
@@ -65,8 +74,8 @@ public class MatrisHesaplama {
                     p++;
                 }
 
-                kofaktor = (int) (Math.pow(-1, 0 + k) * calculateDeterminantLaplace(tempMatris, n - 1));
-                determinant += matris[0][k] * kofaktor;
+                cofactor = (int) (Math.pow(-1, 0 + k) * calculateDeterminantLaplace(tempMatris, n - 1));
+                determinant += matris[0][k] * cofactor;
 
             }
         }

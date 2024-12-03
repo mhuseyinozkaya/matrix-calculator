@@ -27,3 +27,5 @@ replay_pid*
 target/
 
 planned_feature_list
+
+nbactions.xml
