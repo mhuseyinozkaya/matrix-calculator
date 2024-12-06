@@ -42,7 +42,7 @@ public class Matrix {
             for (int j = 0; j < matrix[0].length; j++) {
                 System.out.print("[ " + matrix[i][j] + " ] ");
             }
-            System.out.println("\n");
+            System.out.println();
         }
     }
 
@@ -122,7 +122,9 @@ public class Matrix {
         double cofactor, determinant = 0;
 
         double[][] temp = new double[n - 1][n - 1];
-        if (n == 2) {
+        if (n == 1) {
+            return matrix[0][0];
+        } else if (n == 2) {
             return (matrix[0][0] * matrix[1][1]) - (matrix[0][1] * matrix[1][0]);
         } else {
 
@@ -146,7 +148,6 @@ public class Matrix {
 
             }
         }
-
         return determinant;
     }
 
@@ -159,7 +160,6 @@ public class Matrix {
                 temp.matrix[j][i] = this.matrix[i][j];
             }
         }
-
         return temp;
     }
 }
