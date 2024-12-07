@@ -8,7 +8,7 @@ public class MatrixCalculator {
 
     static HashMap<String, Matrix> matrixMap = new HashMap<>(); // Matrisleri saklamak için HashMap tanımı
 
-    static Scanner input = new Scanner(System.in);
+    static Scanner input = new Scanner(System.in);  // Girdi alma
 
     public static void showMenu() {
         System.out.println("--- Matris Hesaplayıcı ---");
@@ -250,8 +250,15 @@ public class MatrixCalculator {
         System.out.print("Çarpmak istediğiniz matrislerin formatını örnekteki gibi girin:  Ör. 'A B' \n>> ");
 
         try {
+
             String[] tokens = input.nextLine().split(" ");
+
+            if (tokens.length != 2) {
+                throw new ArrayIndexOutOfBoundsException();
+            }
+
             Matrix temp = selectMatrix(tokens[0]).multiplyMatrices(selectMatrix(tokens[1]));
+
             if (temp != null) {
 
                 matrixMap.put(temp.getName(), temp);
@@ -259,8 +266,8 @@ public class MatrixCalculator {
                 temp.printMatrix();
 
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Doğru formatta girdiğinizden emin olun!");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Matrisleri doğru formatta girdiğinizden emin olun!");
         } catch (NullPointerException e) {
             System.out.println("Matrislerin mevcut olduğundan emin olun!");
         }
@@ -292,14 +299,20 @@ public class MatrixCalculator {
         System.out.print("Transpozunu hesaplamak istediğiniz matrisi girin: Ör. 'A' \n>> ");
         try {
 
-            Matrix temp = selectMatrix(input.nextLine()).calculateTranspose();
+            String name = input.nextLine();
+
+            if (!name.matches("[a-zA-Z]")) {
+                throw new IllegalArgumentException();
+            }
+
+            Matrix temp = selectMatrix(name).calculateTranspose();
 
             matrixMap.put(temp.getName(), temp);
 
             temp.printMatrix();
 
-        } catch (NumberFormatException e) {
-            System.out.println("Doğru formatta girdiğinizden emin olun!");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Matris adını harf girdiğinizden emin olun!");
         } catch (NullPointerException e) {
             System.out.println("Matrisin mevcut olduğundan emin olun!");
         }
