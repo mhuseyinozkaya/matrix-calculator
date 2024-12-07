@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class MatrixCalculator {
+public class MatrixCalculator extends ClearConsole {
 
     static HashMap<String, Matrix> matrixMap = new HashMap<>(); // Matrisleri saklamak için HashMap tanımı
 
@@ -14,15 +14,14 @@ public class MatrixCalculator {
         System.out.println("--- Matris Hesaplayıcı ---");
         System.out.println("1. Matris Ekle");
         System.out.println("2. Matrisleri Listele");
-        System.out.println("3. Matris Ara");
-        System.out.println("4. Matris Sil");
-        System.out.println("5. Matris Toplama");
-        System.out.println("6. Matris Çıkarma");
-        System.out.println("7. Skaler Çarpma");
-        System.out.println("8. Matris Çarpımı");
-        System.out.println("9. Determinant Hesaplama");
-        System.out.println("10. Transpoz Hesaplama");
-        System.out.println("0. Çıkış");
+        System.out.println("3. Matris Sil\n--------------------");
+        System.out.println("4. Matris Toplama");
+        System.out.println("5. Matris Çıkarma");
+        System.out.println("6. Skaler Çarpma");
+        System.out.println("7. Matris Çarpımı");
+        System.out.println("8. Determinant Hesaplama");
+        System.out.println("9. Transpoz Hesaplama");
+        System.out.println("0. Çıkış\n--------------------");
         System.out.print(">> ");
         //System.out.println("Shell");
     }
@@ -35,7 +34,7 @@ public class MatrixCalculator {
         System.out.print("Matrisin adını girin: \n>> ");
         name = input.nextLine();
 
-        if (name.matches("[a-zA-Z]")) {
+        if (name.matches("[a-zA-Z]+")) {
             for (String key : matrixMap.keySet()) {
                 if (key.equals(name)) {
                     System.out.print(name + " adında zaten bir matris var, matris oluşturulamıyor!");
@@ -68,7 +67,7 @@ public class MatrixCalculator {
                     throw new NegativeArraySizeException();
                 }
 
-                return new Matrix(name, rows, cols);
+                return new Matrix(name, rows, cols, Matrix.idCounter());
 
             } catch (NumberFormatException e) {
                 System.out.println("Lütfen sayı girdiğinizden emin olun!");
@@ -101,73 +100,58 @@ public class MatrixCalculator {
         return temp;
     }
 
-    public static Matrix searchMatrix() {
+    /*public static Matrix searchMatrix() {
 
-        //ilgili matrisi Arama
-        Matrix temp = null;
-
-        System.out.print("Aramak istediğiniz matrisin adını girin: \n>> ");
-        String inputName = input.nextLine();
-
-        temp = matrixMap.get(inputName);
-
-        if (temp == null) {
-            System.out.print("Bu isimde bir matris bulunamadı.");
-        } else {
-            temp.printMatrix();
-        }
-        input.nextLine();
-        return temp;
-    }
-
+    }*/
     public static void listAllMatrices() {
         if (matrixMap.isEmpty()) {
-            System.out.println("HashMap boş.");
             return;
         }
         for (Map.Entry<String, Matrix> entry : matrixMap.entrySet()) {
-            System.out.print("\n>> Matris Adı : " + entry.getKey() + " | ");
+            System.out.println("=========================");
+            System.out.println(
+                    "\n>> Matris Adı : " + entry.getKey()
+                    + "\n>> Boyut : " + entry.getValue().getDimension()
+                    + "\n>> Matris ID : " + entry.getValue().getID()
+                    + "\n>> Determinant : " + entry.getValue().getDeterminant());
 
-            System.out.println("Determinant : " + entry.getValue().getDeterminant());
-            System.out.println("////////////////////////////////////////\n");
+            System.out.println("\n=========================\n");
             entry.getValue().printMatrix();
-            System.out.println("\n////////////////////////////////////////"); // İki matris arasında boş bir satır eklemek için
+            System.out.println("\n=========================\n"); // İki matris arasında boş bir satır eklemek için
         }
         input.nextLine();
     }
 
-    public static Matrix selectMatrix() {
+    public static Matrix selectMatrix(String input) {
 
         Matrix temp = null;
 
-        System.out.print("Seçmek istediğiniz matrisin adını girin: \n>> ");
-        String inputName = input.nextLine();
+        //Eğer matris adı ile girerse
+        if (input.matches("[a-zA-Z]+")) {
+            temp = matrixMap.get(input);
+        } //Eğer matris ID'si ile girerse
+        else if (input.matches("[0-9]+")) {
+            for (Map.Entry<String, Matrix> entry : matrixMap.entrySet()) {
+                //Eğer matrisin ID'si ile input eşitse
+                if (input.equals(String.valueOf(entry.getValue().getID()))) {
+                    temp = matrixMap.get(entry.getValue().getName());
+                }
+            }
 
-        temp = matrixMap.get(inputName);
-
-        if (temp == null) {
-            System.out.println("Seçmek istediğiniz matris bulunamadı.");
+        } else {
+            System.out.println("Lütfen doğru formatta girdiğinizden emin olun!");
         }
 
-        return temp;
-    }
-
-    public static Matrix selectMatrix(String name) {
-
-        Matrix temp = null;
-
-        temp = matrixMap.get(name);
-
         if (temp == null) {
-            System.out.println("Seçmek istediğiniz matris bulunamadı.");
+            System.out.println("Seçmek istediğiniz matris bulunumadı!");
         }
 
         return temp;
     }
 
     public static void deleteMatrix() {
-
-        Matrix temp = selectMatrix();
+        System.out.print("Silinecek matrisi girin : ");
+        Matrix temp = selectMatrix(input.nextLine());
 
         if (temp == null) {
             System.out.println("Matris silinemedi!");
@@ -182,23 +166,17 @@ public class MatrixCalculator {
 
         System.out.print("Matrisleri boşluk bırakarak girin: Ör. 'A B' \n>> ");
 
-        try {
-            String[] tokens = input.nextLine().split(" ");
-
-            Matrix temp = selectMatrix(tokens[0]).add(selectMatrix(tokens[1]));
-
-            if (temp != null) {
-                matrixMap.put(temp.getName(), temp);
-
-                temp.printMatrix();
-            }
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Doğru formatta girdiğinizden emin olun!");
-        } catch (NullPointerException e) {
-            System.out.println("Matrislerin mevcut olduğundan emin olun!");
+        Matrix[] matrices = parseMatrixInput(input.nextLine(), 2);
+        if (matrices == null) {
+            return;
         }
 
+        Matrix result = matrices[0].add(matrices[1]);
+        if (result != null) {
+            matrixMap.put(result.getName(), result);
+            result.printMatrix();
+
+        }
         input.nextLine();
     }
 
@@ -206,28 +184,37 @@ public class MatrixCalculator {
 
         System.out.print("Matrisleri boşluk bırakarak girin: Ör. 'A B' \n>> ");
 
-        try {
-            String[] tokens = input.nextLine().split(" ");
+        Matrix[] matrices = parseMatrixInput(input.nextLine(), 2);
+        if (matrices == null) {
+            return;
+        }
 
-            Matrix temp = selectMatrix(tokens[0]).subtract(selectMatrix(tokens[1]));
+        Matrix result = matrices[0].subtract(matrices[1]);
+        if (result != null) {
+            matrixMap.put(result.getName(), result);
+            result.printMatrix();
+        }
+        input.nextLine();
+    }
 
-            if (temp != null) {
-                matrixMap.put(temp.getName(), temp);
+    public static void multiplyMatrices() {
+        System.out.print("Çarpmak istediğiniz matrislerin formatını örnekteki gibi girin:  Ör. 'A B' \n>> ");
 
-                temp.printMatrix();
+        Matrix[] matrices = parseMatrixInput(input.nextLine(), 2);
+        if (matrices == null) {
+            return;
+        }
 
-            }
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Doğru formatta girdiğinizden emin olun!");
-        } catch (NullPointerException e) {
-            System.out.println("Matrislerin mevcut olduğundan emin olun!");
+        Matrix result = matrices[0].multiplyMatrices(matrices[1]);
+        if (result != null) {
+            matrixMap.put(result.getName(), result);
+            result.printMatrix();
         }
         input.nextLine();
     }
 
     public static void scalarMultiplication() {
-        System.out.print("Boşluk bırakarak matris ile çarpmak istediğiniz skaleri ardından işlem yapmak istediğiniz matrisi girin: Ör. '3 A' \n>> ");
+        System.out.print("Boşluk bırakarak skaleri ardından işlem yapmak istediğiniz matrisi girin: Ör. '3 A' \n>> ");
         try {
             String[] tokens = input.nextLine().split(" ");
 
@@ -246,77 +233,69 @@ public class MatrixCalculator {
         input.nextLine();
     }
 
-    public static void multiplyMatrices() {
-        System.out.print("Çarpmak istediğiniz matrislerin formatını örnekteki gibi girin:  Ör. 'A B' \n>> ");
-
-        try {
-
-            String[] tokens = input.nextLine().split(" ");
-
-            if (tokens.length != 2) {
-                throw new ArrayIndexOutOfBoundsException();
-            }
-
-            Matrix temp = selectMatrix(tokens[0]).multiplyMatrices(selectMatrix(tokens[1]));
-
-            if (temp != null) {
-
-                matrixMap.put(temp.getName(), temp);
-
-                temp.printMatrix();
-
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Matrisleri doğru formatta girdiğinizden emin olun!");
-        } catch (NullPointerException e) {
-            System.out.println("Matrislerin mevcut olduğundan emin olun!");
-        }
-        input.nextLine();
-    }
-
     public static void calculateDeterminant() {
-        System.out.print("Determinantı hesaplanacak matrisi girin Ör. 'A' \n>> ");
+        System.out.println("Determinantı hesaplanacak matrisi girin Ör. 'A'");
         try {
-
-            Matrix temp = selectMatrix(input.nextLine());
+            String argument = input.nextLine();
+            Matrix temp = selectMatrix(argument);   //  Matrisi alma
 
             if (temp.getMatrix().length != temp.getMatrix()[0].length) {
                 System.out.println("Girdiğiniz matris kare matris değil, matris hesaplanamaz!");
                 input.nextLine();
                 return;
             }
-            temp.setDeterminant(Matrix.calculateDeterminantLaplace(temp.getMatrix(), temp.getMatrix().length));
+
+            temp.setDeterminant(Matrix.calculateDeterminantLaplace(temp.getMatrix(), temp.getMatrix().length)); //  Determinant hesaplama
             System.out.println("Determinant : " + temp.getDeterminant());
-        } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Doğru formatta girdiğinizden emin olun!");
-        } catch (NullPointerException e) {
-            System.out.println("Matrislerin mevcut olduğundan emin olun!");
+
+        } catch (Exception e) {
+            System.out.println("Matrisin mevcut olduğundan emin olun!");
         }
         input.nextLine();
     }
 
     public static void calculateTranspose() {
-        System.out.print("Transpozunu hesaplamak istediğiniz matrisi girin: Ör. 'A' \n>> ");
+        System.out.println("Transpozunu hesaplamak istediğiniz matrisi girin: Ör. 'A'");
         try {
+            String argument = input.nextLine();
 
-            String name = input.nextLine();
+            Matrix temp = selectMatrix(argument);   //  Matrisi alma
 
-            if (!name.matches("[a-zA-Z]")) {
-                throw new IllegalArgumentException();
-            }
+            Matrix result = temp.calculateTranspose();
 
-            Matrix temp = selectMatrix(name).calculateTranspose();
+            matrixMap.put(result.getName(), result);
 
-            matrixMap.put(temp.getName(), temp);
+            result.printMatrix();
 
-            temp.printMatrix();
-
-        } catch (IllegalArgumentException e) {
-            System.out.println("Matris adını harf girdiğinizden emin olun!");
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             System.out.println("Matrisin mevcut olduğundan emin olun!");
         }
         input.nextLine();
+    }
+
+    public static Matrix[] parseMatrixInput(String argument, int expectedCount) {
+        try {
+            String[] tokens = argument.split(" ");
+            if (tokens.length != expectedCount) {
+                System.out.println("Girdi formatı yanlış! Beklenen matris sayısı: " + expectedCount);
+                return null;
+            }
+
+            Matrix[] matrices = new Matrix[expectedCount];
+
+            for (int i = 0; i < expectedCount; i++) {
+                matrices[i] = selectMatrix(tokens[i]); //Matrisi getirme
+                if (matrices[i] == null) {
+                    System.out.println("Matris bulunamadı: " + tokens[i]);
+                    return null;
+                }
+            }
+            return matrices;
+        } catch (Exception e) {
+            System.out.println("Bir hata oluştu! Lütfen giriş formatını kontrol edin.");
+            input.nextLine();
+            return null;
+        }
     }
 
     public static void main(String[] args) {
@@ -342,33 +321,29 @@ public class MatrixCalculator {
                     break;
                 case "3":
                     clrscr();
-                    searchMatrix();
+                    deleteMatrix();
                     break;
                 case "4":
                     clrscr();
-                    deleteMatrix();
+                    add();
                     break;
                 case "5":
                     clrscr();
-                    add();
+                    subtract();
                     break;
                 case "6":
                     clrscr();
-                    subtract();
+                    scalarMultiplication();
                     break;
                 case "7":
                     clrscr();
-                    scalarMultiplication();
+                    multiplyMatrices();
                     break;
                 case "8":
                     clrscr();
-                    multiplyMatrices();
-                    break;
-                case "9":
-                    clrscr();
                     calculateDeterminant();
                     break;
-                case "10":
+                case "9":
                     clrscr();
                     calculateTranspose();
                     break;
@@ -388,8 +363,8 @@ public class MatrixCalculator {
         } while (true);
     }
 
-    public static void clrscr() {
+    /*public static void clrscr() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
-    }
+    }*/
 }

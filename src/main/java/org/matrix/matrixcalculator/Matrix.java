@@ -2,14 +2,24 @@ package org.matrix.matrixcalculator;
 
 public class Matrix {
 
+    private final String dimension;
     private String name;
     private Double determinant = null;
     private double[][] matrix;
+    private int id;
+
+    static int counter = 0; //  ID tutucu
 
     //Kurucu Metod
-    Matrix(String name, int rows, int cols) {
+    Matrix(String name, int rows, int cols, int id) {
         this.name = name;
+        this.dimension = String.valueOf(rows) + "x" + String.valueOf(cols);
         this.matrix = new double[rows][cols];
+        this.id = id;
+    }
+
+    public static int idCounter() {
+        return ++counter;
     }
 
     // Getter ve Setter yöntemleri
@@ -37,6 +47,18 @@ public class Matrix {
         this.determinant = determinant;
     }
 
+    public int getID() {
+        return id;
+    }
+
+    public void setID(int num) {
+        this.id = num;
+    }
+
+    public String getDimension() {
+        return this.dimension;
+    }
+
     public void printMatrix() {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
@@ -46,11 +68,11 @@ public class Matrix {
         }
     }
 
-    //  Operations...
+    /*  Operations... */
     public Matrix add(Matrix other) {
         if (matrix.length == other.matrix.length && matrix[0].length == other.matrix[0].length) {
 
-            Matrix temp = new Matrix("(" + this.name + "+" + other.name + ")", matrix.length, matrix[0].length);
+            Matrix temp = new Matrix("(" + this.name + "+" + other.name + ")", matrix.length, matrix[0].length, idCounter());
 
             for (int i = 0; i < matrix.length; i++) {
                 for (int j = 0; j < matrix[0].length; j++) {
@@ -67,7 +89,7 @@ public class Matrix {
     public Matrix subtract(Matrix other) {
         if (matrix.length == other.matrix.length && matrix[0].length == other.matrix[0].length) {
 
-            Matrix temp = new Matrix("(" + this.name + "-" + other.name + ")", matrix.length, matrix[0].length);
+            Matrix temp = new Matrix("(" + this.name + "-" + other.name + ")", matrix.length, matrix[0].length, idCounter());
 
             for (int i = 0; i < matrix.length; i++) {
                 for (int j = 0; j < matrix[0].length; j++) {
@@ -83,7 +105,7 @@ public class Matrix {
 
     public Matrix scalarMultiplication(double scalar) {
 
-        Matrix temp = new Matrix("(" + scalar + this.name + ")", matrix.length, matrix[0].length);
+        Matrix temp = new Matrix("(" + scalar + this.name + ")", matrix.length, matrix[0].length, idCounter());
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
@@ -95,7 +117,7 @@ public class Matrix {
 
     public Matrix multiplyMatrices(Matrix other) {
         if (matrix[0].length == other.matrix.length) {
-            Matrix temp = new Matrix("(" + this.name + "*" + other.name + ")", this.matrix.length, other.matrix[0].length);
+            Matrix temp = new Matrix("(" + this.name + "*" + other.name + ")", this.matrix.length, other.matrix[0].length, idCounter());
             double cellSum;
 
             for (int i = 0; i < this.matrix.length; i++) {
@@ -153,7 +175,7 @@ public class Matrix {
 
     public Matrix calculateTranspose() {
 
-        Matrix temp = new Matrix("tp(" + this.name + ")", this.matrix[0].length, this.matrix.length);
+        Matrix temp = new Matrix("tp(" + this.name + ")", this.matrix[0].length, this.matrix.length, idCounter());
 
         for (int i = 0; i < this.matrix.length; i++) {
             for (int j = 0; j < this.matrix[0].length; j++) {
